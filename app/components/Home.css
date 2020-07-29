@@ -1,14 +1,13 @@
 .container {
-  position: absolute;
-  top: 30%;
-  left: 10px;
   text-align: center;
+  display: flex;
+  height: 100%;
 }
 
-.container h2 {
-  font-size: 5rem;
+.contentRead{
+  width: 50%;
 }
 
-.container a {
-  font-size: 1.4rem;
+.contentWrite{
+  width: 50%     ;
 }

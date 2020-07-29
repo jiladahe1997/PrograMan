@@ -1,0 +1,21 @@
+.header {
+    height: 7vh;
+    min-height: 55px;
+}
+
+.appcontainer {
+    display: flex;
+    height: 93vh;
+}
+
+.appcontainer-sidebar{
+    width: 10vw;
+}
+
+.appcontainer-app {
+    flex-grow: 1;
+}
+
+.divider{
+
+}
