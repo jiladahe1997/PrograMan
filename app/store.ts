@@ -11,7 +11,7 @@ const rootReducer = createRootReducer(history);
 export type RootState = ReturnType<typeof rootReducer>;
 
 const router = routerMiddleware(history);
-const middleware = [...getDefaultMiddleware(), router];
+const middleware = [...getDefaultMiddleware({serializableCheck: false,immutableCheck: false}), router];
 
 const excludeLoggerEnvs = ['test', 'production'];
 const shouldIncludeLogger = !excludeLoggerEnvs.includes(

@@ -8,14 +8,30 @@ import style from './Header.css'
 
 import { connect } from 'react-redux'
 import serialPort from 'serialport'
-import {setSerialport, setReadCommand, setWriteCommand } from '../features/Home/HomeSlice'
+import {setSerialport, setReadCommand, setWriteCommand,setSerialIdle, setSerialIdleTimeoutHandle } from '../features/Home/HomeSlice'
 
-class Header extends React.Component {
-    constructor(props) {
+interface Props {
+    serialport: Object,
+    readCommand: string,
+    writeCommand: string,
+    serialIdle: boolean,
+    serialIdleTimeoutHandle: NodeJS.Timeout,
+    setSerialport: Function,
+    setReadCommand: Function,
+    setWriteCommand: Function,
+    setSerialIdle: Function,
+    setSerialIdleTimeoutHandle: Function
+}
+
+interface State {
+    serialPort: string,
+    serialPortList: Array<any>,
+}
+
+class Header extends React.Component<Props, State> {
+    constructor(props:Props) {
         super(props)
         this.state = {
-            readParams: {},
-            writeParams: {},
             serialPort: '',
             /** serialPortList 元素内容:
              [{locationId: "Port_#0004.Hub_#0002"
@@ -30,7 +46,6 @@ class Header extends React.Component {
         }
         this.handleChange = this.handleChange.bind(this)
         this.TextFiledChange = this.TextFiledChange.bind(this)
-        this.dataHandle = this.dataHandle.bind(this)
     }
 
     async componentDidMount() {
@@ -41,42 +56,20 @@ class Header extends React.Component {
         })
     }
 
-    
-    handleChange(event) {
+    handleChange(event:any) {
         this.setState({
             ...this.state,
             serialPort: event.target.value,
         })
-        const serialport = new serialPort(event.target.value, {baudRate: 115200},(err)=>{
-            if (err) {
-                return console.log('Error: ', err.message)
-              }
+        const serialport = new serialPort(event.target.value, {baudRate: 115200},(err:any)=>{
+          if (err) {
+              return console.log('Error: ', err.message)
+            }
         })
         this.props.setSerialport(serialport)
-        serialport.on('data', this.dataHandle)
-        serialport.on('end', ()=>{
-            console.log(this._tempData.toString())
-            this._tempData = null
-        })
     }
 
-    dataHandle(data) {
-        if(this._idle) {
-            clearTimeout(this.idle)
-            this.idle=null
-        } else {
-            console.log(this._tempData.toString())
-            return
-        }
-        this._idle = setTimeout(1000,()=>{
-            this._idle = null
-        })
-        this._tempData = Buffer.alloc(1024);
-        this._tempData = Buffer.concat([this._tempData, data]) 
-           
-    }
-
-    TextFiledChange(target, event) {
+    TextFiledChange(target:string, event:any) {
         switch (target) {
             case 'read':
                 this.props.setReadCommand(event.target.value)
@@ -110,24 +103,28 @@ class Header extends React.Component {
                         })}
                     </Select>
                 </FormControl>
-                <TextField value={this.state.readCommand} onChange={this.TextFiledChange.bind(this, 'read')} className={style.commandInput} id="standard-basic" label="read command" />
-                <TextField value={this.state.writeCommand} onChange={this.TextFiledChange.bind(this, 'write')} className={style.commandInput} id="standard-basic" label="write command" />
+                <TextField value={this.props.readCommand} onChange={this.TextFiledChange.bind(this, 'read')} className={style.commandInput} id="standard-basic" label="read command" />
+                <TextField value={this.props.writeCommand} onChange={this.TextFiledChange.bind(this, 'write')} className={style.commandInput} id="standard-basic" label="write command" />
             </div>
         )
     }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state:any) => {
     return {
         serialport: state.home.serialport,
         readCommand: state.home.readCommand,
-        writeCommand: state.home.writeCommand
+        writeCommand: state.home.writeCommand,
+        serialIdle: state.home.serialIdle,
+        serialIdleTimeoutHandle: state.home.serialIdleTimeoutHandle
     }
 }
 
 const mapDispatchToProps  = {
         setSerialport,
         setReadCommand,
-        setWriteCommand
+        setWriteCommand,
+        setSerialIdle,
+        setSerialIdleTimeoutHandle
 }
 export default connect(mapStateToProps,mapDispatchToProps)(Header)

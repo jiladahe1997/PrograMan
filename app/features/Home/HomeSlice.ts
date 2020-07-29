@@ -6,7 +6,9 @@ const HomeSlice = createSlice({
     initialState: {
         serialport: {},
         readCommand: "",
-        writeCommand: ""
+        writeCommand: "",
+        serialIdle: true,
+        serialIdleTimeoutHandle: null,
     },
     reducers: {
         setSerialport: (state, action) => {
@@ -18,15 +20,21 @@ const HomeSlice = createSlice({
         setWriteCommand: (state, action) => {
             state.writeCommand = action.payload
         },
+        setSerialIdle: (state, action) => {
+            state.serialIdle = action.payload
+        },
+        setSerialIdleTimeoutHandle: (state, action) => {
+            state.serialIdleTimeoutHandle = action.payload
+        }
     }
 })
 
 export default HomeSlice.reducer
 
-export const { setSerialport, setReadCommand, setWriteCommand } = HomeSlice.actions
-
-export const selectSerialport = (state: any) => state.Home.Serialport;
-
-export const selectReadCommand = (state: any) => state.Home.readCommand
-
-export const selectWriteCommand = (state: any) => state.Home.writeCommand
+export const { 
+    setSerialport, 
+    setReadCommand, 
+    setWriteCommand, 
+    setSerialIdle, 
+    setSerialIdleTimeoutHandle 
+} = HomeSlice.actions
