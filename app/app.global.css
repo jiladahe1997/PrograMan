@@ -8,7 +8,8 @@ body {
   position: relative;
   height: 100vh;
   font-family: Arial, Helvetica, Helvetica Neue, serif;
-  overflow-y: hidden;
+  overflow-y: auto;
+  margin: 0;
 }
 
 h2 {
@@ -37,4 +38,8 @@ a:hover {
   opacity: 1;
   text-decoration: none;
   cursor: pointer;
+}
+
+.react-json-view {
+  text-align: left;
 }

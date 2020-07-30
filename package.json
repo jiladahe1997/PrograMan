@@ -35,7 +35,7 @@
     "test-e2e": "node -r @babel/register ./internals/scripts/CheckBuildsExist.js && cross-env NODE_ENV=test testcafe electron:./app ./test/e2e/HomePage.e2e.ts",
     "test-e2e-live": "node -r @babel/register ./internals/scripts/CheckBuildsExist.js && cross-env NODE_ENV=test testcafe --live electron:./app ./test/e2e/HomePage.e2e.ts",
     "test-watch": "yarn test --watch",
-    "rebuild": "electron-rebuild" 
+    "rebuild": "electron-rebuild"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -275,6 +275,8 @@
     "@fortawesome/fontawesome-free": "^5.14.0",
     "@hot-loader/react-dom": "^16.13.0",
     "@material-ui/core": "^4.11.0",
+    "@material-ui/lab": "^4.0.0-alpha.56",
+    "@material-ui/styles": "^4.10.0",
     "@reduxjs/toolkit": "^1.4.0",
     "connected-react-router": "^6.6.1",
     "electron-debug": "^3.1.0",
@@ -282,6 +284,7 @@
     "electron-updater": "^4.3.1",
     "history": "^4.7.2",
     "react": "^16.13.1",
+    "react-diff-viewer": "^3.1.1",
     "react-dom": "^16.12.0",
     "react-hot-loader": "^4.12.21",
     "react-json-view": "^1.19.1",

@@ -3,13 +3,18 @@
     min-height: 55px;
 }
 
+.container {
+    display: flex;
+    height: 100vh;
+    flex-direction: column
+}
+
 .appcontainer {
     display: flex;
-    height: 93vh;
 }
 
 .appcontainer-sidebar{
-    width: 10vw;
+    width: 15vw;
 }
 
 .appcontainer-app {

@@ -9,5 +9,13 @@
 }
 
 .contentWrite{
-  width: 50%     ;
+  width: 50%  ;
+}
+
+.backdrop{
+  z-index: 1000 !important;
+}
+
+.actionButton{
+  margin: 1vh 0 1vh 0;
 }

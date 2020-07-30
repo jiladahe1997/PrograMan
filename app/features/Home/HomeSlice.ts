@@ -1,15 +1,33 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+interface History {
+    send: string
+    recv: string
+    time: Date
+}
+
+type SliceState = {
+    serialport: any,
+    readCommand: string
+    writeCommand: string
+    serialIdle: boolean,
+    serialIdleTimeoutHandle: NodeJS.Timeout,
+    history: Array<History>
+}
+
+// First approach: define the initial state using that type
+const initialState: SliceState = {
+    serialport: {},
+    readCommand: "",
+    writeCommand: "",
+    serialIdle: true,
+    serialIdleTimeoutHandle: setTimeout(()=>{},0),
+    history: []
+}
 
 const HomeSlice = createSlice({
     name: 'Home',
-    initialState: {
-        serialport: {},
-        readCommand: "",
-        writeCommand: "",
-        serialIdle: true,
-        serialIdleTimeoutHandle: null,
-    },
+    initialState,
     reducers: {
         setSerialport: (state, action) => {
             state.serialport = action.payload
@@ -25,6 +43,19 @@ const HomeSlice = createSlice({
         },
         setSerialIdleTimeoutHandle: (state, action) => {
             state.serialIdleTimeoutHandle = action.payload
+        },
+        addHistory: (state, action) => {
+            state.history.unshift({
+                send: action.payload.send,
+                recv: action.payload.recv,
+                time: new Date
+            })
+            state.history = Array.prototype.concat(state.history,[])
+        },
+        modifyHistory: (state, action) => {
+            const target = state.history.find(v=>v.send == action.payload.send)
+            if(!target) throw new Error("target find error")
+            target.recv = action.payload.recv
         }
     }
 })
@@ -36,5 +67,7 @@ export const {
     setReadCommand, 
     setWriteCommand, 
     setSerialIdle, 
-    setSerialIdleTimeoutHandle 
+    setSerialIdleTimeoutHandle,
+    addHistory,
+    modifyHistory
 } = HomeSlice.actions

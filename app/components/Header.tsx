@@ -98,7 +98,7 @@ class Header extends React.Component<Props, State> {
                     >
                         {this.state.serialPortList.map((v,idx)=>{
                         return (
-                        <MenuItem value={v.path} key={idx}>{v.path}</MenuItem>
+                            <MenuItem value={v.path} key={idx}>{v.path+'-'+v.manufacturer}</MenuItem>
                         )
                         })}
                     </Select>

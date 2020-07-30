@@ -8,7 +8,7 @@ import Divider from '@material-ui/core/Divider';
 export default class HomePage extends React.Component {
   render() {
     return (
-      <div>
+      <div className={style.container}>
         <div className={style.header}>
           <Header></Header>
         </div>
