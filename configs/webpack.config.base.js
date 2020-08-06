@@ -7,7 +7,7 @@ import webpack from 'webpack';
 import { dependencies as externals } from '../app/package.json';
 
 export default {
-  externals: [...Object.keys(externals || {}), 'bindings', 'serialport'], 
+  externals: [...Object.keys(externals || {})], 
 
   module: {
     rules: [

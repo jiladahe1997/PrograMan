@@ -18,6 +18,8 @@ DeleteSourceMaps();
 
 export default merge(baseConfig, {
   devtool: process.env.DEBUG_PROD === 'true' ? 'source-map' : 'none',
+  
+  externals: ['bindings', 'serialport'],
 
   mode: 'production',
 
