@@ -9,6 +9,7 @@ import style from './Header.css'
 import { connect } from 'react-redux'
 import serialPort from 'serialport'
 import {setSerialport, setReadCommand, setWriteCommand,setSerialIdle, setSerialIdleTimeoutHandle } from '../features/Home/HomeSlice'
+import electronStore from '../electron-store/electron-store'
 
 interface Props {
     serialport: Object,
@@ -54,6 +55,8 @@ class Header extends React.Component<Props, State> {
           ...this.state,
           serialPortList: list
         })
+        this.props.setReadCommand(electronStore.get('readCommand') || '')
+        this.props.setWriteCommand(electronStore.get('writeCommand')  || '')
     }
 
     handleChange(event:any) {

@@ -10,6 +10,8 @@ import Backdrop from '@material-ui/core/Backdrop';
 import { connect } from 'react-redux'
 import { setSerialIdle,setSerialIdleTimeoutHandle,setReadCommand, addHistory, modifyHistory } from '../features/Home/HomeSlice'
 import { withStyles } from '@material-ui/core/styles';
+import electronStore from '../electron-store/electron-store'
+import store from '../electron-store/electron-store';
 
 const materialStyles = ({
   actionButton: {
@@ -68,36 +70,58 @@ class Home extends React.Component<Props ,State> {
   }
 
   readHandle() {
-    this.props.serialport.on('data', this.dataHandle)
-    this.props.setSerialIdle(false)
-    this.props.setSerialIdleTimeoutHandle(
-        setTimeout(this.timeoutHanle,1000)
-    )
-    this.props.addHistory({
-      send: this.props.readCommand,
-      recv: '',
-    })
-    this.setState({
-      ...this.state,
-      status: workStatus.waitingReadData
-    },()=>this.props.serialport.write(this.props.readCommand.replace('\\r','\r')))
+    try {
+      this.props.serialport.on('data', this.dataHandle)
+      this.props.setSerialIdle(false)
+      this.props.setSerialIdleTimeoutHandle(
+          setTimeout(this.timeoutHanle,1000)
+      )
+      this.props.addHistory({
+        send: this.props.readCommand,
+        recv: '',
+      })
+      this.setState({
+        ...this.state,
+        status: workStatus.waitingReadData
+      },()=>this.props.serialport.write(this.props.readCommand.replace('\\r','\r')))
+      electronStore.set('readCommand', this.props.readCommand)
+    } catch(error) {
+      this.setState({
+        errorMessageOpen: true,
+        erroeMessageStr: "操作失败，请检查串口是否打开！",
+        readParams: {},
+        writeParams: {},
+        status: workStatus.idle
+      })
+    }
   }
   
   writeHandle() {
-    this.props.serialport.on('data', this.dataHandle)
-    this.props.setSerialIdle(false)
-    this.props.setSerialIdleTimeoutHandle(
-        setTimeout(this.timeoutHanle,1000)
-    )
-    this.props.addHistory({
-      send: this.props.writeCommand,
-      recv: '',
-    })
-    const str = this.props.writeCommand.replace('\\r','\r').replace('${json}',JSON.stringify(this.state.writeParams))
-    this.setState({
-      ...this.state,
-      status: workStatus.waitingWriteData
-    }, ()=>this.props.serialport.write(str))
+    try {
+      this.props.serialport.on('data', this.dataHandle)
+      this.props.setSerialIdle(false)
+      this.props.setSerialIdleTimeoutHandle(
+          setTimeout(this.timeoutHanle,1000)
+      )
+      this.props.addHistory({
+        send: this.props.writeCommand,
+        recv: '',
+      })
+      const str = this.props.writeCommand.replace('\\r','\r').replace('${json}',JSON.stringify(this.state.writeParams))
+      this.setState({
+        ...this.state,
+        status: workStatus.waitingWriteData
+      }, ()=>this.props.serialport.write(str))
+      electronStore.set('writeCommand', this.props.writeCommand)
+    } catch(error) {
+      this.setState({
+        errorMessageOpen: true,
+        erroeMessageStr: "操作失败，请检查串口是否打开！",
+        readParams: {},
+        writeParams: {},
+        status: workStatus.idle
+      })
+    }
   }
 
   dataHandle( data:Buffer ) {
