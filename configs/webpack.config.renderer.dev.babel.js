@@ -43,6 +43,8 @@ if (!requiredByDLLConfig && !(fs.existsSync(dll) && fs.existsSync(manifest))) {
 export default merge(baseConfig, {
   devtool: 'inline-source-map',
 
+  externals: ['bindings', 'serialport'],
+
   mode: 'development',
 
   target: 'electron-renderer',

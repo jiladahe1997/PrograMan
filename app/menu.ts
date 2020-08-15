@@ -5,6 +5,7 @@ import {
   BrowserWindow,
   MenuItemConstructorOptions,
 } from 'electron';
+import electronStore from './electron-store/electron-store'
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
   selector?: string;
@@ -281,6 +282,17 @@ export default class MenuBuilder {
               shell.openExternal('https://github.com/electron/electron/issues');
             },
           },
+        ],
+      },
+      {
+        label: 'Config',
+        submenu: [
+          {
+            label: 'Edit Config',
+            click() {
+              electronStore.openInEditor()
+            },
+          }
         ],
       },
     ];
