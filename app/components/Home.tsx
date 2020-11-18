@@ -11,7 +11,6 @@ import { connect } from 'react-redux'
 import { setSerialIdle,setSerialIdleTimeoutHandle,setReadCommand, addHistory, modifyHistory } from '../features/Home/HomeSlice'
 import { withStyles } from '@material-ui/core/styles';
 import electronStore from '../electron-store/electron-store'
-import store from '../electron-store/electron-store';
 
 const materialStyles = ({
   actionButton: {
@@ -134,6 +133,10 @@ class Home extends React.Component<Props ,State> {
   }
 
   timeoutHanle() {
+    /* debug */
+    // this._tempData = Buffer.from('get_all_params \r\n{"name":"GNSS","params":{"dev_id":3866698,"hw_ver":65536,"sf_ver":65539},"iot_auth":{"product_key":"a1prkglRr7c","device_name":"TEST02","device_secret":"27754eacefcce2c53bb47b6ff9ee6366"},"gnss_server":{"ip4_addr":"123.57.186.122","port":11000}}')
+    // this._tempData = Buffer.concat([this._tempData,Buffer.from([0x00])])
+    // this._tempData = Buffer.concat([this._tempData,Buffer.from("msh>")])
     console.log(this._tempData.toString())
     const recvString = this._tempData.toString()
     this._tempData = Buffer.alloc(0);
@@ -167,16 +170,22 @@ class Home extends React.Component<Props ,State> {
          * 
          * so you must remove the first line echo 
          */
-          const _strWithoutEcho = recvString.match(/\n[\s\S]+\n/ig)
+          const _strWithoutEcho = recvString.match(/\n[\s\S]+/ig)
           if(!_strWithoutEcho) throw new Error(`response fault, response is:\r\n ${recvString}`)
           /* due to regex have a Line Break(LB) '\n', must remove it first */
           const _strWithoutLB = _strWithoutEcho[0].slice(1)
+
+          /**
+           * 20201118 add:
+           * match json string only, search for '{' and '}'.
+           */
+          const _strWithOnlyJson = _strWithoutLB.match(/{.*}/ig) || [];
       
           let json = null
           try {
-            json = JSON.parse(_strWithoutLB)
+            json = JSON.parse(_strWithOnlyJson[0])
           } catch(e) {
-            throw new Error(`json parse fault, string is:\r\n ${_strWithoutLB}`)
+            throw new Error(`json parse fault, string is:\r\n ${recvString}`)
           }
       
           this.setState({
