@@ -24,10 +24,13 @@ const materialStyles = ({
         'font-size': '0.7rem'
     },
     container: {
-        'padding-right': '0.5vw'
+        'padding-right': '0.5vw',
+        'overflow': 'auto',
+        'display': 'flex',
+        'flex-direction': 'column',
     },
     'historyList-container': {
-        overflow: 'scroll',
+      'overflow': 'auto'
     }
 });
 interface State {
