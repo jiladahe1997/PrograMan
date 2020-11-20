@@ -40,7 +40,7 @@
 
 3. 打开PrograMan，选择串口，输入 **接口说明** 中的读取指令和写入指令
 
-4. 点击 `加载/刷新参数`，会将读取到的数据以可视化Json的形式同时展示在读取区域和写入区域。你可以观察到，读取区域不可编辑，写入区域则可以进行编辑。
+4. 点击 `加载/刷新参数`，会将读取到的数据以可视化json的形式同时展示在读取区域和写入区域。你可以观察到，读取区域不可编辑，写入区域则可以进行编辑。
 
 5. 在写入区域根据你的要求，对json进行编辑。
 
@@ -64,28 +64,27 @@
 
 其工作原理是：
 
- - 读取：PrograMan通过串口发送一个字符串ReadCommand,设备解析到这个特定的字符串后，读取位于EEPROM/FLASH/其他非易失性存储介质上的参数，并通过串口发送回ProgramMan。
+ - 读取：PrograMan通过串口发送一个字符串`ReadCommand`,设备解析到这个特定的字符串后，读取位于EEPROM/FLASH/其他非易失性存储介质上的参数，并通过串口发送回PrograMan。
 
- - 烧写：同理。PrograMan发送一个字符串WriteCommand后面跟上特定的参数，例如 `WriteCommand {"id":1,"SN":"TEST_20201119_01"}`。设备同样对这个指令以及参数进行解析，并将参数写入参数区，并发送一个回复给PrograMan指示烧写成功与否。
-
-<br/>
-
- ## 因此你需要做的事包括：
+ - 烧写：同理。PrograMan发送一个字符串`WriteCommand`后面跟上特定的参数，例如 `WriteCommand {"id":1,"SN":"TEST_20201119_01"}`。设备同样对这个指令以及参数进行解析，并将参数写入参数区，并发送一个回复给PrograMan指示烧写成功与否。
 
 <br/>
 
-### 裸机或者RTOS实时操作系统
- 1. 指定一个 ReadCommand 和一个 WriteCommand
- 2. 编写 ReadCommand 和 WriteCommand 对应的处理函数。<br/>
+ ### 因此你需要做的事包括：
+
+#### 裸机或者RTOS实时操作系统
+ 1. 指定一个 `ReadCommand` 和一个 `WriteCommand`
+    注意 `WriteCommand` 中使用${json}作为目标json。例如`WriteCommand ${json}\r`会被替换成`WriteCommand {"SN":"TEST01"}\r`
+ 2. 编写 `ReadCommand` 和 `WriteCommand` 对应的处理函数。<br/>
  **ReadCommand必须返回json字符串**<br/>
  **WriteCommand的参数也必须是json字符串**<br/>
- 因此我个人建议，直接以json字符串作为参数的格式。
+ 因此我个人建议，直接以json字符串作为设备上保存参数的格式。
 
  3. 编写串口中断处理函数，使得串口收到 ReadCommand 或 WriteCommand 时，能够顺利的执行2中对应的函数。<br/> 一般而言，如果你使用Shell，那么这一步Shell已经帮你做了，例如RT-thread的控制台提供MSH_EXPORT宏定义； 如果你不使用Shell，则需要自己编写串口中断函数。
 
 <br/>
 
- ### Linux或安卓系统
+ #### Linux或安卓系统
 
 TODO
 
@@ -179,8 +178,8 @@ static BaseType_t set_param(char *pcWriteBuffer, size_t xWriteBufferLen, const c
 
 ## 串口中断处理函数
 
-直接使用hell自带的命令
-
+直接使用Shell自带的命令
+S
 ```c
 FREERTOS_SHELL_CMD_REGISTER("set_all_params","设置设备参数",set_param,1);
 FREERTOS_SHELL_CMD_REGISTER("get_all_params","get_all_params",get_all_params,0);
