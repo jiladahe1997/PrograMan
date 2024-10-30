@@ -11,7 +11,7 @@
 
 # 简介
 
-这是一个用于嵌入式设备的上位机，关于上位机更详细的介绍请见：https://blog.csdn.net/jiladahe1997/article/details/107650245。
+这是一个用于嵌入式设备的上位机，关于上位机更详细的介绍请见：https://blog.csdn.net/jiladahe1997/article/details/107650245
 
 本软件主要使用Electron编写。
 
